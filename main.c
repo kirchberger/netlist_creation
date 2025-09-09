@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
 
 int main(int argc, char* argv[]) {
 	printf("file location is: %s\n",argv[1]);
@@ -9,10 +12,15 @@ int main(int argc, char* argv[]) {
 	
 	char buffer[255];
 	while(fgets(buffer,255,ptr_net) != NULL){
-		printf("%s\n", buffer);
+		char* piece = strtok(buffer," ");
+		if (piece != "\n"){
+			printf("%s", strlen(piece));
+		}
 	}
 	
 	fclose(ptr_net);
 	printf("Finished \n");
 	return 0;
 }
+
+
