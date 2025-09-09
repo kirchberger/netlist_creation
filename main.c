@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main {
+int main(0) {
 
 	printf("Finished \n ");
 	return 0;
