@@ -1,5 +1,5 @@
 
-
+// System and component structures and methods accociated
 
 typedef struct resistor{
   int node1;
@@ -21,9 +21,20 @@ typedef struct node{
 } node;
 
 typedef struct circuit{
-  int resistors;
-  int capacitors;
+  uint resistors;
+  uint capacitors;
   resistor* resRoot;
   capacitor* capRoot;
+  resistor* resEnd;
+  capacitor* capEnd;
   node* nodeRoot;
 }circuit;
+
+int addComponent(circuit* netlist, char* token[],int componentType){
+  printf("Resistors: %d, %d\n", netlist->resistors, netlist);
+  return 0;
+}
+
+int memoryDealocate(){
+
+}

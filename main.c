@@ -4,63 +4,59 @@
 #include "struc.h"
 
 
-int lexor (char* fileLoc){
+int lexor (char* fileLoc, circuit* netlist){
   FILE *file;
   file = fopen(fileLoc,"r");
 
   char buff[100];
-  char* token;
+  char *token[4]; // may need to change in future this might be better as a linked structure for potentially long lines.
+  int componentType;
+  int arguments;
+  int arg;
   //struct systemdata system = {0,0};
-  int i = 0;
+  int line = 0;
   while(fgets(buff,100,file) != NULL){
-    i++;
-    token = strtok(buff," \n");
-    if (token  != NULL){
-      switch (token[0]){
-	case 'r':
-	  //system->res++;
-	  printf("Resistor\n");
-	  //check if this has been used
-
-	  //check if either node has been used
-	  token = strtok(NULL, " ");
-	  token = strtok(NULL, " ");
-
-	  //check value validity
-
-	  token = strtok(NULL, " ");
-	  //check for too many argument
-	  if (strtok(NULL, " ")){
-	    printf("Too many arguments on line %d\n",i);
-	    // Memory deallocate
-	    fclose(file);
-	    return 1;
+    line++;
+    token[0] = strtok(buff," \n");
+    if (token[0] != NULL){
+      switch (token[0][0]){
+	case 'r': // Resistor
+	  componentType = 0;
+	  arguments = 4;
 	  break;
-	case 'c':
-	  //system->caps++;
-	  printf("Capacitor\n");
-	  //check if this has been used
-
-	  //check if either node has been used
-	  token = strtok(NULL, " ");
-	  token = strtok(NULL, " ");
-
-	  //check value validity
-
-	  token = strtok(NULL, " ");
-	  //check for too many argument
-	  if (strtok(NULL, " ")){
-	    printf("Too many arguments on line %d\n",i);
-	    // Memory deallocate
-	    fclose(file);
-	    return 1;
-
+	case 'c': // Capacitor
+	  componentType = 1;
+	  arguments = 4;
 	  break;
-	default:
-	  printf("Component on line %d not recognized\n",i);
+	default: // Unknown
+	  printf("Component on line %d not recognized\n",line);
 	  // Memory deallocate
 	  fclose(file);
 	  return 1;
+      }
+      
+      arg = 1;
+      while(arg < arguments){ // Grabs all arguments
+	token[arg] = strtok(NULL, " \n");
+	if (token[arg] == NULL){ // Checks for too few arguments
+	  printf("Too few arguments on line %d\n",line);
+	  // Memory deallocate
+	  fclose(file);
+	  return 1;
+	}
+	arg++;
+      }
+
+      if (strtok(NULL, " \n")){ // Checks for too many arguments
+        printf("Too many arguments on line %d\n",line);
+	// Memory deallocate
+	fclose(file);
+	return 1;
+      }
+
+      if (addComponent(netlist, token, componentType)){
+	fclose(file);
+	return 1;
       }
     }
   }
@@ -69,8 +65,8 @@ int lexor (char* fileLoc){
 }
 
 int main(int argc, char* argv[]) {
-  // Check conditions
-  if (argc<2){
+
+  if (argc<2){ // Check conditions
     printf("No file location\n");
     return 1;
   }
@@ -79,12 +75,15 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
+  circuit* netlist = malloc(sizeof(circuit)); // Allocate systen structure
+
   // Run lexor to get all components
-  if (lexor(argv[1]))
+  if (lexor(argv[1],netlist)){
+    free(netlist);
     return 1;
-
+  }
   // Build system
-
+  free(netlist);
   printf("Finished \n");
   return 0;
 }
