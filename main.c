@@ -15,15 +15,46 @@ int lexor (char* fileLoc){
   while(fgets(buff,100,file) != NULL){
     i++;
     token = strtok(buff," \n");
-    if (token != NULL){
+    if (token  != NULL){
       switch (token[0]){
 	case 'r':
 	  //system->res++;
 	  printf("Resistor\n");
+	  //check if this has been used
+
+	  //check if either node has been used
+	  token = strtok(NULL, " ");
+	  token = strtok(NULL, " ");
+
+	  //check value validity
+
+	  token = strtok(NULL, " ");
+	  //check for too many argument
+	  if (strtok(NULL, " ")){
+	    printf("Too many arguments on line %d\n",i);
+	    // Memory deallocate
+	    fclose(file);
+	    return 1;
 	  break;
 	case 'c':
 	  //system->caps++;
 	  printf("Capacitor\n");
+	  //check if this has been used
+
+	  //check if either node has been used
+	  token = strtok(NULL, " ");
+	  token = strtok(NULL, " ");
+
+	  //check value validity
+
+	  token = strtok(NULL, " ");
+	  //check for too many argument
+	  if (strtok(NULL, " ")){
+	    printf("Too many arguments on line %d\n",i);
+	    // Memory deallocate
+	    fclose(file);
+	    return 1;
+
 	  break;
 	default:
 	  printf("Component on line %d not recognized\n",i);
@@ -38,19 +69,21 @@ int lexor (char* fileLoc){
 }
 
 int main(int argc, char* argv[]) {
+  // Check conditions
   if (argc<2){
     printf("No file location\n");
     return 1;
   }
-
   if (argc>3){
     printf("Too many arguments\n");
     return 1;
   }
-  printf("file location is: %s\n",argv[1]);
 
+  // Run lexor to get all components
   if (lexor(argv[1]))
     return 1;
+
+  // Build system
 
   printf("Finished \n");
   return 0;
