@@ -2,28 +2,28 @@
 
 
 typedef struct resistor{
-	int identifier;
-	int node1;
-	int node2;
-	struct resistor* next;
+  int node1;
+  int node2;
+  struct resistor* next;
+  char identifier[];
 } resistor;
 
 typedef struct capacitor{
-	int identifier;
-	int node1;
-	int node2;
-	struct capacitor* next;
+  int node1;
+  int node2;
+  struct capacitor* next;
+  char identifier[];
 } capacitor;
 
 typedef struct node{
-	char[];
-	struct node* next;
+  struct node* next;
+  char identifier[];
 } node;
 
 typedef struct circuit{
-	int resistors;
-	int capacitors;
-	resistor* resRoot;
-	capacitor* capRoot;
-	node* nodeRoot;
+  int resistors;
+  int capacitors;
+  resistor* resRoot;
+  capacitor* capRoot;
+  node* nodeRoot;
 }circuit;
