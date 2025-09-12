@@ -30,7 +30,7 @@ int lexor (char* fileLoc, circuit* netlist){
 	  break;
 	default: // Unknown
 	  printf("Component on line %d not recognized\n",line);
-	  // Memory deallocate
+	  memoryDeallocate(netlist);
 	  fclose(file);
 	  return 1;
       }
@@ -40,7 +40,7 @@ int lexor (char* fileLoc, circuit* netlist){
 	token[arg] = strtok(NULL, " \n");
 	if (token[arg] == NULL){ // Checks for too few arguments
 	  printf("Too few arguments on line %d\n",line);
-	  // Memory deallocate
+	  memoryDeallocate(netlist);
 	  fclose(file);
 	  return 1;
 	}
@@ -49,12 +49,13 @@ int lexor (char* fileLoc, circuit* netlist){
 
       if (strtok(NULL, " \n")){ // Checks for too many arguments
         printf("Too many arguments on line %d\n",line);
-	// Memory deallocate
+	memoryDeallocate(netlist);
 	fclose(file);
 	return 1;
       }
 
       if (addComponent(netlist, token, componentType)){
+	memoryDeallocate(netlist);
 	fclose(file);
 	return 1;
       }
@@ -83,6 +84,8 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   // Build system
+  printf("Resistors: %d, Capacitors: %d\n",netlist->comps[0],netlist->comps[1]);
+  memoryDeallocate(netlist);
   free(netlist);
   printf("Finished \n");
   return 0;
